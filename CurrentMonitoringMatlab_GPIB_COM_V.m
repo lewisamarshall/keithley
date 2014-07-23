@@ -1,4 +1,4 @@
-% Current Monitoring with Keithley 2410 
+% Current Monitoring with Keithley 2410
 % Moran Bercovici, Jan 2008
 
 clear all;
@@ -15,11 +15,11 @@ FileName='2-8-13.txt';
 V=1100;            % Applied voltage [V]
 CurrLim=1e-2;           % Current compliance limit [A]
 ComProtocol='COM';      % GPIB/COM  - Communication protocol
-dt=0.0;                 % Additional delay time between measurements 
+dt=0.0;                 % Additional delay time between measurements
 
 WriteToFileFlag=1;      % 1/0 (Yes/No) Write results to file
 
-% Definitions for GPIB 
+% Definitions for GPIB
 %(Make sure the Keithley is set to the same PAD)
 GPIBID=1;               % GPIB iterface ID  (board index)
 PAD=20;                 % Instrument address (Primary address)
@@ -43,10 +43,10 @@ end
 switch (ComProtocol)
     case('COM')
         out=instrfind('Port','COM1');
-        if ~isempty (out)          
+        if ~isempty (out)
         fclose(out);
         end
-        g=serial('COM1');    
+        g=serial('COM1');
       set(g,{'BaudRate','DataBits','Parity','StopBits','Terminator'},COMData)
     case('GPIB')
       g=gpib('ni',GPIBID,PAD);  % Define GPIB Device
@@ -64,7 +64,7 @@ fprintf(g,':SENS:FUNC:ON "CURR", "VOLT"');  %Set voltage and current measurement
 %fprintf(g,':SENS:CURR:RANG 1e-6');   % Set expected reading in amps (for V-sourcing)
 fprintf(g,':SENS:CURR:RANG:AUTO 1'); % Set automatic range
 fprintf(g,[':SENS:CURR:PROT ',num2str(CurrLim)]);   % Set current compliance limit (for V-sourcing)
-fprintf(g,':SENS:CURR:NPLC 1');      % Set integration time for measurements, based on power line cycles. i.e 1 --> 1/60 sec = 16.67 msec 
+fprintf(g,':SENS:CURR:NPLC 1');      % Set integration time for measurements, based on power line cycles. i.e 1 --> 1/60 sec = 16.67 msec
 fprintf(g,':SENS:AVER:STAT 0');      % Disable digital averaging filter (can be performed offline)
 
 % SOURCE COMMANDS
@@ -99,16 +99,16 @@ while 1
     CurrVec(ij)=OUT(2);
     VoltVec(ij)=OUT(1);
     TimeVec(ij)=OUT(3);
-    
+
     %figure(1);
-    subplot(2,1,1); plot(TimeVec-TimeVec(1),CurrVec,'b','linewidth',2);  xlabel ('Time [sec]'); ylabel ('Current [A]'); 
-    subplot(2,1,2); plot(TimeVec-TimeVec(1),VoltVec,'r');  xlabel ('Time [sec]'); ylabel ('Voltage [V]');  
+    subplot(2,1,1); plot(TimeVec-TimeVec(1),CurrVec,'b','linewidth',2);  xlabel ('Time [sec]'); ylabel ('Current [A]');
+    subplot(2,1,2); plot(TimeVec-TimeVec(1),VoltVec,'r');  xlabel ('Time [sec]'); ylabel ('Voltage [V]');
     drawnow;
-    
+
     if WriteToFileFlag
         fprintf(fid,'%10.5f\t\t%5.5e\t\t%5.5e\n',[TimeVec(ij)'-TimeVec(1),VoltVec(ij)',CurrVec(ij)']');
     end
-    
+
     keyIn = get(gcf, 'CurrentCharacter');
     if strcmp(keyIn,'q') || strcmp(keyIn,'b')
         break;
@@ -120,8 +120,5 @@ if WriteToFileFlag
     fclose(fid);
 end
 
-fprintf(g,':OUTP OFF');               % Turn off output
+fprintf(g, ':OUTP OFF');               % Turn off output
 fclose(g);
-
-
-
