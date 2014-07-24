@@ -33,7 +33,7 @@ class keithley(object):
         self.write(':OUTP OFF')
         self.ser.close()
 
-    def capture(self, t=10, filename='data.csv'):
+    def _capture(self, t=10, filename='data.csv'):
         t0 = time.time()
         dt = 0
         V_list = []
@@ -46,6 +46,9 @@ class keithley(object):
             wait(0.1)
         return (t_list, V_list)
 
+    def capture(filename):
+        pass
+
     def set_term(self, loc='FRON'):
         self.write(':ROUT:TERM '+loc)
 
@@ -53,4 +56,4 @@ class keithley(object):
         pass
 
 if __name__ == '__main__':
-    keithley()
+    a = keithley()
