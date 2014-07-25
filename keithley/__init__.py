@@ -10,7 +10,7 @@ import sys
 
 class keithley(object):
 
-    i_lim = 0.001
+    i_lim = 0.01
     V = 500
     init_commands = ['*RST',
                      ':ROUT:TERM FRON',
