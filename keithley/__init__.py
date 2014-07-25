@@ -5,6 +5,7 @@ if __name__ == '__main__':
 import serial
 import time
 import csv
+import sys
 
 
 class keithley(object):
@@ -44,7 +45,6 @@ class keithley(object):
         print 'Keithley on', self.ser.name, 'initialized.'
 
     def write(self, command):
-        print command
         if sys.platform == 'win32':
             self.ser.write(command+'\n')
         elif sys.platform == 'darwin':
@@ -66,7 +66,7 @@ class keithley(object):
         self.write('READ?')
         data = self.ser.readline()
         try:
-            data = map(float, data.split(','))
+            data = map(float, data.lstrip().rstrip().split(','))
             data = [data[2], data[0], data[1]]
         except:
             pass
@@ -77,18 +77,20 @@ class keithley(object):
         print 'Keithley on', self.ser.name, 'released.'
         self.ser.close()
 
-    def capture(self, t=10, filename='data.csv'):
+    def capture(self, t=10, filename='data.csv', mode='wb'):
         t0 = time.time()
         dt = 0
         data=[]
-        with open(filename, 'w') as file:
+        with open(filename, mode) as file:
             writer = csv.writer(file)
-            writer.writerow(['T', 'V', 'I'])
+            if 'w' in mode:
+                writer.writerow(['T', 'V', 'I'])
             while dt < t:
                 dt = time.time()-t0
                 data.append(self.read())
                 time.sleep(0.1)
-                writer.writerow(data[-1])
+                if data[-1]:
+                    writer.writerow(data[-1])
         return data
 
     def set_term(self, loc='FRON'):
@@ -120,18 +122,18 @@ if __name__ == '__main__':
         k = keithley('/dev/tty.PL2303-00001014')
     elif sys.platform == 'win32':
         k = keithley('COM7')
-    # k.write(':SENS:CURR:RANG 1e-6')
-    # k.write(':SENS:CURR:RANG:AUTO 1')
-    # k.write(':SENS:CURR:PROT .001')
-    # k.write(':SENS:CURR:NPLC 1')
-    # k.write(':SENS:AVER:STAT 0')
-    # k.write(':SOUR:CLE:AUTO OFF')
-    # k.write(':SOUR:VOLT:RANG 500.0')
-    # k.write(':SOUR:VOLT:RANG:AUTO 1')
-    # k.set_v(100)
+    k.write(':SENS:CURR:RANG 1e-6')
+    k.write(':SENS:CURR:RANG:AUTO 1')
+    k.write(':SENS:CURR:PROT .001')
+    k.write(':SENS:CURR:NPLC 2')
+    k.write(':SENS:AVER:STAT 0')
+    k.write(':SOUR:CLE:AUTO OFF')
+    k.write(':SOUR:VOLT:RANG 500.0')
+    k.write(':SOUR:VOLT:RANG:AUTO 1')
+    k.set_v(100)
     # k.set_mode('I')
     # k.set_i(.001)
-    # k.output('ON')
-    # # k.capture()
-    # k.output('OFF')
+    k.output('ON')
+    k.capture()
+    k.output('OFF')
     del k
