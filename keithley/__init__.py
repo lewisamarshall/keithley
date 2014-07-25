@@ -1,3 +1,7 @@
+if __name__ == '__main__':
+    import sys
+    sys.path.append('/usr/local/lib/python2.7/site-packages')
+
 import serial
 import time
 import csv
@@ -22,11 +26,17 @@ class keithley(object):
 
     def __init__(self, port=0):
         self.ser = serial.Serial(port, timeout=1)
-        self.write(':SYST:BEEP:STATE OFF') # Turn off the beeping
-        self.write(':ROUT:TERM FRON')      # Send voltage to front
-        self.write(':SENS:FUNC:ON "CURR", "VOLT"')
+        self.ser.flush()
+        self.write('*cls')
+        self.write('*rst')
+        self.write('*idn?')
+        self.identity = self.ser.readline()
+        print self.identity
+        self.write(':SYST:BEEP:STATE OFF')  # Turn off the beeping
+        # self.write(':ROUT:TERM FRON')      # Send voltage to front
+        # self.write(':SENS:FUNC:ON "CURR", "VOLT"')
         # self.write('SENS:FUNC:CONC 1')
-        self.write(':FORM:ELEM VOLT, CURR, TIME')
+        # self.write(':FORM:ELEM VOLT, CURR, TIME')
 
         # for command in self.init_commands:
         #     self.ser.write(command)
@@ -34,15 +44,21 @@ class keithley(object):
         print 'Keithley on', self.ser.name, 'initialized.'
 
     def write(self, command):
-        self.ser.write(command+'\n')
+        print command
+        if sys.platform == 'win32':
+            self.ser.write(command+'\n')
+        elif sys.platform == 'darwin':
+            self.ser.write(command+'\n')
+        else:
+            self.ser.write(command+'\n')
 
     def set_mode(self, mode='V'):
         if mode == 'V':
             self.write(':SOUR:FUNC:MODE VOLT')
             self.write(':SOUR:VOLT:MODE FIX')
         elif mode == 'I':
-            self.write(':SOUR:FUNC:MODE CURR')
-            self.write(':SOUR:CURR:MODE FIX')
+            self.write(':SOUR:FUNC:MODE VOLT')
+            self.write(':SOUR:VOLT:MODE FIX')
         else:
             print "Expecting mode 'V' or 'I'."
 
@@ -57,7 +73,7 @@ class keithley(object):
         return data
 
     def __del__(self):
-        self.output('OFF')
+        # self.output('OFF')
         print 'Keithley on', self.ser.name, 'released.'
         self.ser.close()
 
@@ -83,7 +99,7 @@ class keithley(object):
 
     def output(self, mode='OFF'):
         if mode in ['ON', 'OFF']:
-            self.write(':OUTP ' + mode)
+            self.write(':OUTPUT ' + mode)
         else:
             print "Expecting 'ON' or 'OFF'."
 
@@ -93,23 +109,29 @@ class keithley(object):
     def set_i(self, I=0):
         self.write(':SOUR:CURR '+str(I))
 
+    def close(self):
+        self.__del__
+
+
 
 if __name__ == '__main__':
-    k = keithley('COM7')
-    k.write(':SENS:CURR:RANG 1e-6')
-    k.write(':SENS:CURR:RANG:AUTO 1')
-    k.write(':SENS:CURR:PROT .001')
-    k.write(':SENS:CURR:NPLC 1')
-    k.write(':SENS:AVER:STAT 0')
-    k.write(':SOUR:CLE:AUTO OFF')
-    k.write(':SOUR:VOLT:RANG 500.0')
-    k.write(':SOUR:VOLT:RANG:AUTO 1')
-    k.set_v(100)
+    print sys.platform
+    if sys.platform == 'darwin':
+        k = keithley('/dev/tty.PL2303-00001014')
+    elif sys.platform == 'win32':
+        k = keithley('COM7')
+    # k.write(':SENS:CURR:RANG 1e-6')
+    # k.write(':SENS:CURR:RANG:AUTO 1')
+    # k.write(':SENS:CURR:PROT .001')
+    # k.write(':SENS:CURR:NPLC 1')
+    # k.write(':SENS:AVER:STAT 0')
+    # k.write(':SOUR:CLE:AUTO OFF')
+    # k.write(':SOUR:VOLT:RANG 500.0')
+    # k.write(':SOUR:VOLT:RANG:AUTO 1')
+    # k.set_v(100)
     # k.set_mode('I')
     # k.set_i(.001)
-    k.output('ON')
-    k.capture()
-    k.output('OFF')
-
-
-                    #  ':SOUR:VOLT '+str(V)
+    # k.output('ON')
+    # # k.capture()
+    # k.output('OFF')
+    del k

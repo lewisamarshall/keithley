@@ -1,2 +1,3 @@
 *.pyc
 keithley/*.pyc
+data.csv
