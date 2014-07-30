@@ -37,7 +37,7 @@ class keithley(object):
         # self.write(':ROUT:TERM FRON')      # Send voltage to front
         # self.write(':SENS:FUNC:ON "CURR", "VOLT"')
         # self.write('SENS:FUNC:CONC 1')
-        # self.write(':FORM:ELEM VOLT, CURR, TIME')
+        self.write(':FORM:ELEM VOLT, CURR, TIME')
 
         # for command in self.init_commands:
         #     self.ser.write(command)

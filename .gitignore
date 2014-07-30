@@ -1,4 +1,3 @@
 *.pyc
 keithley/*.pyc
-data.csv
-ladder.csv
+*.csv

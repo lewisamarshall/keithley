@@ -1,19 +1,18 @@
 from keithley import keithley
 import numpy
 
-v = numpy.linspace(0,1100, 23)
+v = numpy.linspace(0,800, 17)
 file = 'ladder.csv'
 
-k = keithley('COM7')
+k = keithley('COM6')
 k.write(':SENS:CURR:RANG 1e-6')
 k.write(':SENS:CURR:RANG:AUTO 1')
-k.write(':SENS:CURR:PROT .001')
+k.write(':SENS:CURR:PROT .01')
 k.write(':SENS:CURR:NPLC 2')
 k.write(':SENS:AVER:STAT 0')
 k.write(':SOUR:CLE:AUTO OFF')
 k.write(':SOUR:VOLT:RANG 1100.0')
 k.write(':SOUR:VOLT:RANG:AUTO 1')
-k.write(':SENS:CURR:PROT .01')
 
 k.output('ON')
 for idx, voltage in enumerate(v):
