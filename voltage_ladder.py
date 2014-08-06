@@ -4,7 +4,7 @@ import numpy
 v = numpy.linspace(0,800, 17)
 file = 'ladder.csv'
 
-k = keithley('COM6')
+k = Keithley('COM6')
 k.write(':SENS:CURR:RANG 1e-6')
 k.write(':SENS:CURR:RANG:AUTO 1')
 k.write(':SENS:CURR:PROT .01')

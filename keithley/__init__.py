@@ -11,7 +11,7 @@ import threading
 import warnings
 
 
-class keithley(object):
+class Keithley(object):
 
     i_lim = 0.01
     V = 500
@@ -137,49 +137,6 @@ class keithley(object):
         self.ser.close()
         print 'Keithley on', self.ser.name, 'released.'
 
-
-    def capture(self, t=None, filename='data.csv', mode='wb'):
-        self.capture_thread = threading.Thread(
-                                               target=_capture,
-                                               args=(filename,
-                                                     mode,
-                                                     wait_time
-                                                     )
-                                               )
-        t0 = time.time()
-        dt = 0
-        with open(filename, mode) as file:
-            writer = csv.writer(file)
-            if 'w' in mode:
-                writer.writerow(['T', 'V', 'I'])
-            while dt < t:
-                dt = time.time()-t0
-                self.data.append(self.read())
-                time.sleep(0.1)
-                if data[-1]:
-                    writer.writerow(data[-1])
-        return data
-
-    def _capture(self, filename='test', mode='wb', wait_time=0.1):
-        self.capturing.set()
-        with open(filename, mode) as file:
-            writer = csv.writer(file)
-            if 'w' in mode:
-                writer.writerow(['T', 'V', 'I'])
-            while self.capturing.is_set():
-                reading = (self.read())
-                if reading:
-                    with self.data_access:
-                        data.append(reading)
-                    writer.writerow(reading)
-                time.sleep(wait_time)
-                self.capturing.clear()
-
-
-    def stop_capture(self):
-        self.capturing.clear()
-        return None
-
     def set_i_range(self, val):
         pass
 
@@ -202,14 +159,14 @@ class keithley(object):
     def close(self):
         self.__del__
 
+    from capture_methods import capture, _capture, stop_capture
 
 
 if __name__ == '__main__':
     if sys.platform == 'darwin':
-        k = keithley('/dev/tty.PL2303-00001014')
+        k = Keithley('/dev/tty.PL2303-00001014')
     elif sys.platform == 'win32':
-        # k = keithley('COM7')
-        k = keithley()
+        k = Keithley()
     k.write(':SENS:CURR:RANG 1e-6')
     k.write(':SENS:CURR:RANG:AUTO 1')
     k.write(':SENS:CURR:PROT .001')

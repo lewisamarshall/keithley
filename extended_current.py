@@ -2,7 +2,7 @@ from keithley import keithley
 
 file = 'itp.csv'
 
-k = keithley('COM6')
+k = Keithley('COM6')
 k.write(':SOUR:FUNC:MODE CURR')
 k.write(':SOUR:CURR:MODE FIX')
 k.write(':SENS:FUNC:CONC 1')
