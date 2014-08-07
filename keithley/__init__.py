@@ -15,7 +15,7 @@ class Keithley(object):
 
     i_lim = 0.01
     V = 500
-    data = []
+    data ={'V':[], 'I':[], 't':[]}
     output_on = False
     init_commands = ['*RST',
                      ':ROUT:TERM FRON',
@@ -41,6 +41,7 @@ class Keithley(object):
         self.writable = threading.Lock()
         self.capturing = threading.Event()
         self.data_access = threading.Lock()
+        self.plotting = threading.Event()
 
         # Acquire the serial port.
         self.ser = serial.Serial(port, timeout=timeout)
@@ -160,7 +161,7 @@ class Keithley(object):
         self.__del__
 
     from capture_methods import capture, _capture, stop_capture
-
+    from plot_methods import _plot_data
 
 if __name__ == '__main__':
     if sys.platform == 'darwin':

@@ -4,29 +4,18 @@ import threading
 import warnings
 
 
-def capture(self, t=None, filename='data.csv', mode='wb'):
+def capture(self, t=None, filename='data.csv', mode='wb',
+            capture_interval = 0.1):
     self.capture_thread = threading.Thread(
                                            target=_capture,
                                            args=(filename,
                                                  mode,
-                                                 wait_time
+                                                 capture_interval
                                                  )
                                            )
-    t0 = time.time()
-    dt = 0
-    with open(filename, mode) as file:
-        writer = csv.writer(file)
-        if 'w' in mode:
-            writer.writerow(['T', 'V', 'I'])
-        while dt < t:
-            dt = time.time()-t0
-            self.data.append(self.read())
-            time.sleep(0.1)
-            if data[-1]:
-                writer.writerow(data[-1])
-    return data
+    return self.capture_thread
 
-def _capture(self, filename='test', mode='wb', wait_time=0.1):
+def _capture(self, filename='test.csv', mode='wb', capture_interval=0.1):
     self.capturing.set()
     with open(filename, mode) as file:
         writer = csv.writer(file)
@@ -36,10 +25,11 @@ def _capture(self, filename='test', mode='wb', wait_time=0.1):
             reading = (self.read())
             if reading:
                 with self.data_access:
-                    data.append(reading)
+                    self.data['V'].append(reading[1])
+                    self.data['I'].append(reading[2])
+                    self.data['t'].append(reading[0])
                 writer.writerow(reading)
-            time.sleep(wait_time)
-            self.capturing.clear()
+            time.sleep(capture_interval)
 
 
 def stop_capture(self):
