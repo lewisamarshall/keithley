@@ -134,8 +134,11 @@ class Keithley(object):
         return data
 
     def __del__(self):
+        self.plotting.clear()
+        self.stop_capture()
         self.output('OFF')
-        self.ser.close()
+        with self.writable:
+            self.ser.close()
         print 'Keithley on', self.ser.name, 'released.'
 
     def set_i_range(self, val):
@@ -158,12 +161,11 @@ class Keithley(object):
         self.write(':SOUR:CURR '+str(I))
 
     def close(self):
-        self.plotting.clear()
-        self.capturing.clear()
         self.__del__
 
     from capture_methods import capture, _capture, stop_capture
-    from plot_methods import _plot_data, stop_plotting, plot_data
+    # from plot_methods import _plot_data, stop_plotting, plot_data
+    from gui import show_gui
 
 if __name__ == '__main__':
     if sys.platform == 'darwin':

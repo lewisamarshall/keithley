@@ -1,4 +1,4 @@
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import time
 import multiprocessing
 
@@ -25,7 +25,6 @@ def _plot_data(self, draw_interval=1):
     while self.plotting.is_set():
         with self.data_access:
             v_line.set_data(self.data['t'], self.data['V'])
-        # plt.draw()
         time.sleep(draw_interval)
         fig.canvas.draw()
 
