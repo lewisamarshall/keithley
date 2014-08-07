@@ -7,13 +7,13 @@ import warnings
 def capture(self, t=None, filename='data.csv', mode='wb',
             capture_interval = 0.1):
     self.capture_thread = threading.Thread(
-                                           target=_capture,
+                                           target=self._capture,
                                            args=(filename,
                                                  mode,
                                                  capture_interval
                                                  )
                                            )
-    return self.capture_thread
+    self.capture_thread.start()
 
 def _capture(self, filename='test.csv', mode='wb', capture_interval=0.1):
     self.capturing.set()

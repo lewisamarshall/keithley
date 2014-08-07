@@ -158,10 +158,12 @@ class Keithley(object):
         self.write(':SOUR:CURR '+str(I))
 
     def close(self):
+        self.plotting.clear()
+        self.capturing.clear()
         self.__del__
 
     from capture_methods import capture, _capture, stop_capture
-    from plot_methods import _plot_data
+    from plot_methods import _plot_data, stop_plotting, plot_data
 
 if __name__ == '__main__':
     if sys.platform == 'darwin':
