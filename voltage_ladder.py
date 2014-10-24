@@ -1,10 +1,11 @@
-from keithley import keithley
+import keithley
 import numpy
+import time
 
-v = numpy.linspace(0,800, 17)
-file = 'ladder.csv'
+v = numpy.linspace(0, 1100, 23)
+file = 'C1.E1.8_ladder_10mMTris.csv'
 
-k = Keithley('COM6')
+k = k = keithley.Keithley()
 k.write(':SENS:CURR:RANG 1e-6')
 k.write(':SENS:CURR:RANG:AUTO 1')
 k.write(':SENS:CURR:PROT .01')
@@ -15,11 +16,10 @@ k.write(':SOUR:VOLT:RANG 1100.0')
 k.write(':SOUR:VOLT:RANG:AUTO 1')
 
 k.output('ON')
+k.capture(2000, file, 'wb')
 for idx, voltage in enumerate(v):
     k.set_v(voltage)
-    if idx==0:
-        k.capture(10, file, 'wb')
-    else:
-        k.capture(10, file, 'ab')
+    time.sleep(10)
+k.stop_capture()
 k.output('OFF')
 del k
