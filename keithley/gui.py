@@ -50,13 +50,13 @@ class BoundControlBox(wx.Panel):
         sizer = wx.StaticBoxSizer(box, wx.VERTICAL)
 
         self.radio_auto = wx.RadioButton(self, -1,
-            label="Auto", style=wx.RB_GROUP)
+                                         label="Auto", style=wx.RB_GROUP)
         self.radio_manual = wx.RadioButton(self, -1,
-            label="Manual")
+                                           label="Manual")
         self.manual_text = wx.TextCtrl(self, -1,
-            size=(35,-1),
-            value=str(initval),
-            style=wx.TE_PROCESS_ENTER)
+                                       size=(35, -1),
+                                       value=str(initval),
+                                       style=wx.TE_PROCESS_ENTER)
 
         self.Bind(wx.EVT_UPDATE_UI, self.on_update_manual_text, self.manual_text)
         self.Bind(wx.EVT_TEXT_ENTER, self.on_text_enter, self.manual_text)
@@ -191,7 +191,6 @@ class GraphFrame(wx.Frame):
         # self.plot_data.xlabel('Time (s)')
         # self.plot_data.ylabel('Voltage (V)')
 
-
     def draw_plot(self):
         """ Redraws the plot
         """
@@ -308,11 +307,5 @@ class GraphFrame(wx.Frame):
 def show_gui(self):
     app = wx.App(False)
     app.frame = GraphFrame(self.data, self.data_access)
-    app.frame.Show()
-    app.MainLoop()
-
-if __name__ == '__main__':
-    app = wx.App(False)
-    app.frame = GraphFrame()
     app.frame.Show()
     app.MainLoop()

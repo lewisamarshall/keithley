@@ -15,7 +15,7 @@ class Keithley(object):
 
     i_lim = 0.01
     V = 500
-    data ={'V':[], 'I':[], 't':[]}
+    data = {'V': [], 'I': [], 't': []}
     output_on = False
     init_commands = ['*RST',
                      ':ROUT:TERM FRON',
@@ -103,10 +103,11 @@ class Keithley(object):
             return None
         else:
             idn_str = idn_str.split(',')
-        self.identity = {'make':idn_str[0],
-                    'model':idn_str[1],
-                    'serial':idn_str[2],
-                    'date':idn_str[3]}
+        self.identity = {'make': idn_str[0],
+                         'model': idn_str[1],
+                         'serial': idn_str[2],
+                         'date': idn_str[3]
+                         }
         if self.identity['make'].startswith('KEITHLEY') and\
                 self.identity['model'].endswith('2410'):
             return True
@@ -165,7 +166,10 @@ class Keithley(object):
 
     from capture_methods import capture, _capture, stop_capture
     # from plot_methods import _plot_data, stop_plotting, plot_data
-    from gui import show_gui
+    try:
+        from gui import show_gui
+    except:
+        pass
 
 if __name__ == '__main__':
     if sys.platform == 'darwin':
