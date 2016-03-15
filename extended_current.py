@@ -1,6 +1,6 @@
 import keithley
 
-file = './C1_lysate_exp1.2.csv'
+file = 'temp.csv'
 
 
 k = keithley.Keithley()

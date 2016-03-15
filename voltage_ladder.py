@@ -3,7 +3,7 @@ import numpy
 import time
 
 v = numpy.linspace(0, 1100, 23)
-file = 'C1.E1.8_ladder_10mMTris.csv'
+file = 'temp.csv'
 
 k = k = keithley.Keithley()
 k.write(':SENS:CURR:RANG 1e-6')

@@ -1,4 +1,4 @@
-keithley_control
-================
+keithley
+========
 
-A set of scripts for controlling a Keithley power supply.
+A Library for controlling a Keithley 2410 power supply.
