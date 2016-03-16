@@ -14,7 +14,6 @@ class Device(object):
             self.port = self._port_search()
         else:
             self.port = port
-        self.port = 'COM7'
         self._link = serial.Serial(self.port, timeout=self.timeout)
 
         # Set up access control.
