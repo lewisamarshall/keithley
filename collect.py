@@ -8,7 +8,7 @@ k.mode('VOLT')
 k._write(':SENS:CURR:PROT .001')
 
 epoch = time.time()
-voltages = [500, -500]
+voltages = [200, -200] * 30
 
 try:
     with open('temp.csv', 'wb') as csvfile:
@@ -17,7 +17,7 @@ try:
         for v in voltages:
             k.target(voltage=v)
             k.active(True)
-            for i in range(100):
+            for i in range(30):
                 data = k.read()
                 t = time.time()-epoch
                 writer.writerow([t, data['voltage'], data['current']])
